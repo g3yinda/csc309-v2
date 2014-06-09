@@ -47,12 +47,20 @@ module.exports = function (grunt) {
       }
     },
     watch: {
+      jade: {
+        files: ['<%= yeoman.app %>/views/{,*//*}*.jade'],
+        tasks: ['jade']
+      },
       js: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: true
         }
+      },
+      less: {
+        files: ['<%= yeoman.app %>/styles/{,*/}*.less'],
+        tasks: ['less']
       },
       mochaTest: {
         files: ['test/server/{,*/}*.js'],
@@ -116,7 +124,33 @@ module.exports = function (grunt) {
         src: ['test/client/spec/{,*/}*.js']
       }
     },
-
+    jade: {
+      dist: {
+        options: {
+          pretty: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>',
+          dest: '.tmp',
+          src: '<%= yeoman.app %>/views/{,*//*}*.jade',
+          ext: '.html'
+        }]
+      }
+    },
+    less: {
+      dist: {
+        files: {
+          '<%= yeoman.app %>/styles/main.css': ['<%= yeoman.app %>/styles/main.less']
+        },
+        options: {
+          sourceMap: true,
+          sourceMapFilename: '<%= yeoman.app %>/styles/main.css.map',
+          sourceMapBasepath: '<%= yeoman.app %>/',
+          sourceMapRootpath: '/'
+        }
+      }
+    },
     // Empties folders to start fresh
     clean: {
       dist: {
@@ -345,6 +379,7 @@ module.exports = function (grunt) {
     // Run some tasks in parallel to speed up the build process
     concurrent: {
       server: [
+        'jade',
         'copy:styles'
       ],
       test: [
@@ -487,6 +522,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'jade',
     'bower-install',
     'useminPrepare',
     'concurrent:dist',
