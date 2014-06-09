@@ -4,5 +4,6 @@ public
 .sass-cache
 app/bower_components
 heroku
-/views
+app/views
+app/styles
 dist

@@ -48,7 +48,7 @@ module.exports = function (grunt) {
     },
     watch: {
       jade: {
-        files: ['<%= yeoman.app %>/views/{,*//*}*.jade'],
+        files: '<%= yeoman.app %>/sources/jade/{,*/}*.jade',
         tasks: ['jade']
       },
       js: {
@@ -59,7 +59,7 @@ module.exports = function (grunt) {
         }
       },
       less: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.less'],
+        files: ['<%= yeoman.app %>/sources/less/{,*/}*.less'],
         tasks: ['less']
       },
       mochaTest: {
@@ -131,9 +131,9 @@ module.exports = function (grunt) {
         },
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>',
-          dest: '.tmp',
-          src: '<%= yeoman.app %>/views/{,*//*}*.jade',
+          cwd: '<%= yeoman.app %>/sources/jade',
+          dest: '<%= yeoman.app %>/views/',
+          src: ['{,*/}*.jade', '!**/_*'],
           ext: '.html'
         }]
       }
@@ -141,7 +141,7 @@ module.exports = function (grunt) {
     less: {
       dist: {
         files: {
-          '<%= yeoman.app %>/styles/main.css': ['<%= yeoman.app %>/styles/main.less']
+          '<%= yeoman.app %>/styles/main.css': ['<%= yeoman.app %>/sources/less/*.less']
         },
         options: {
           sourceMap: true,
@@ -483,6 +483,8 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'jade',
+      'less',
       'bower-install',
       'concurrent:server',
       'autoprefixer',
@@ -523,6 +525,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'jade',
+    'less',
     'bower-install',
     'useminPrepare',
     'concurrent:dist',
