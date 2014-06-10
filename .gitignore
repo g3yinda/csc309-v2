@@ -6,4 +6,5 @@ app/bower_components
 heroku
 app/views
 app/styles
+app/scripts
 dist

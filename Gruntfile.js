@@ -22,6 +22,7 @@ module.exports = function (grunt) {
     yeoman: {
       // configurable paths
       app: require('./bower.json').appPath || 'app',
+      sources: 'sources',
       dist: 'dist'
     },
     express: {
@@ -48,8 +49,16 @@ module.exports = function (grunt) {
     },
     watch: {
       jade: {
-        files: '<%= yeoman.app %>/sources/jade/{,*/}*.jade',
+        files: '<%= yeoman.sources %>/jade/{,*/}*.jade',
         tasks: ['jade']
+      },
+      coffee: {
+        files: '<%= yeoman.sources %>/coffee/{,*/}*.coffee',
+        tasks: ['coffee'],
+      },
+      less: {
+        files: '<%= yeoman.sources %>/less/{,*/}*.less',
+        tasks: ['less']
       },
       js: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
@@ -57,10 +66,6 @@ module.exports = function (grunt) {
         options: {
           livereload: true
         }
-      },
-      less: {
-        files: ['<%= yeoman.app %>/sources/less/{,*/}*.less'],
-        tasks: ['less']
       },
       mochaTest: {
         files: ['test/server/{,*/}*.js'],
@@ -102,6 +107,55 @@ module.exports = function (grunt) {
       }
     },
 
+    //Preprocessor tasks
+    jade: {
+      dist: {
+        options: {
+          pretty: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.sources %>/jade/',
+          dest: '<%= yeoman.app %>/views/',
+          src: ['{,*/}*.jade', '!**/_*'],
+          ext: '.html'
+        }]
+      }
+    },
+    coffee: {
+      compile: {
+        options:{
+          bare: true
+        },
+        files: {
+          '<%= yeoman.app %>/scripts/app.js': '<%= yeoman.sources %>/coffee/app/*.coffee'// compile and concat into single file
+        }
+      },
+      glob_to_multiple: {
+        expand: true,
+        cwd: '<%= yeoman.sources %>/coffee/',
+        src: ['{,*/}*.coffee', '!app/*.coffee'],
+        dest: '<%= yeoman.app %>/scripts/',
+        ext: '.js',
+        options:{
+          bare: true
+        }
+      }
+    },
+    less: {
+      dist: {
+        files: {
+          '<%= yeoman.app %>/styles/main.css': ['<%= yeoman.sources %>/less/*.less']
+        },
+        options: {
+          sourceMap: true,
+          sourceMapFilename: '<%= yeoman.app %>/styles/main.css.map',
+          sourceMapBasepath: '<%= yeoman.app %>/',
+          sourceMapRootpath: '/'
+        }
+      }
+    },
+
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
@@ -124,33 +178,7 @@ module.exports = function (grunt) {
         src: ['test/client/spec/{,*/}*.js']
       }
     },
-    jade: {
-      dist: {
-        options: {
-          pretty: true
-        },
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/sources/jade',
-          dest: '<%= yeoman.app %>/views/',
-          src: ['{,*/}*.jade', '!**/_*'],
-          ext: '.html'
-        }]
-      }
-    },
-    less: {
-      dist: {
-        files: {
-          '<%= yeoman.app %>/styles/main.css': ['<%= yeoman.app %>/sources/less/*.less']
-        },
-        options: {
-          sourceMap: true,
-          sourceMapFilename: '<%= yeoman.app %>/styles/main.css.map',
-          sourceMapBasepath: '<%= yeoman.app %>/',
-          sourceMapRootpath: '/'
-        }
-      }
-    },
+    
     // Empties folders to start fresh
     clean: {
       dist: {
@@ -484,6 +512,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'jade',
+      'coffee',
       'less',
       'bower-install',
       'concurrent:server',
@@ -525,6 +554,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'jade',
+    'coffee',
     'less',
     'bower-install',
     'useminPrepare',

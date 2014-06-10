@@ -1,0 +1,23 @@
+//- This serves as the layout for
+//- an Angular Single Page App
+
+doctype html
+html.no-js
+  //<![endif]
+  include includes/_head
+  body(ng-app='fullstackApp')
+    //if lt IE 7
+      p.browsehappy
+        | You are using an
+        strong outdated
+        | browser. Please
+        a(href='http://browsehappy.com/') upgrade your browser
+        | to improve your experience.
+    
+    include includes/_navbar
+
+    //Add your site or application content here
+    .container(ng-view='')
+        block contents
+
+    include includes/_foot

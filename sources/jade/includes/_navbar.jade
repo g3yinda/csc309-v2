@@ -1,5 +1,9 @@
-.header(ng-controller='NavbarCtrl')
-    ul.nav.nav-pills.pull-right
+.container-fluid
+  .row
+    mixin navlist
+      ul
+    mixin menulist
+      ul.nav.nav-pills.pull-right
         li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
           a(ng-href='{{item.link}}') {{item.title}}
         li(ng-hide='currentUser', ng-class='{active: isActive(\'/login\')}')
@@ -8,4 +12,13 @@
           a(href='/signup') Sign up
         li(ng-show='currentUser', ng-class='{active: isActive(\'/logout\')}')
           a(href='', ng-click='logout()') Logout
-      h3.text-muted fullstack
+      
+    .header(ng-controller='NavbarCtrl')
+      +menulist()
+      +navlist()
+      h3.text-muted ParlezVu
+
+    .header.double(ng-controller='NavbarCtrl')
+      +menulist()
+      +navlist()
+
