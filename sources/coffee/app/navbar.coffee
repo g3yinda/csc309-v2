@@ -1,15 +1,20 @@
 (($) ->
   
   lastScroll = $(window).scrollTop()
-  h = $('#navbar').height()
+  $navbar = $('#navbar')
+  h = $navbar.height()
 
   $(window).scroll ->
     currentScroll = $(window).scrollTop()
     if currentScroll < lastScroll 
-      $('#navdouble').fadeIn()
-    else if currentScroll > h
-      $('#navdouble').fadeOut()
-
+      $navbar.fadeIn()
+    else
+      $navbar.fadeOut()
+      
+    if currentScroll > h  
+      $navbar.removeClass('blendin')
+    else
+      $navbar.addClass('blendin')
     lastScroll = currentScroll
     return
 
